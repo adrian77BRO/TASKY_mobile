@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasky/core/network/token_service.dart';
 import 'package:tasky/user/data/models/login.dart';
 import 'package:tasky/user/data/models/user.dart';
 import 'package:tasky/user/data/repositories/user_repository.dart';
@@ -19,6 +20,7 @@ class UserViewModel extends ChangeNotifier {
 
     if (result['statusCode'] == 201 && body['status'] == 'success') {
       token = body['token'];
+      await TokenService.saveToken(token!);
     }
 
     isLoading = false;

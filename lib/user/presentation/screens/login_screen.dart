@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tasky/task/presentation/screens/task_list_screen.dart';
 import 'package:tasky/user/presentation/screens/register_screen.dart';
 import 'package:tasky/user/presentation/notifiers/user_viewmodel.dart';
 
@@ -120,7 +121,12 @@ class LoginScreen extends StatelessWidget {
                               context,
                             ).showSnackBar(SnackBar(content: Text(message)));
                             if (authVM.token != null) {
-                              // TODO: Navegar a tareas
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => TaskListScreen(),
+                                ),
+                              );
                             }
                           },
                   child:

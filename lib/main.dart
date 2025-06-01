@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tasky/task/presentation/notifiers/task_viewmodel.dart';
 import 'package:tasky/user/presentation/screens/login_screen.dart';
 import 'package:tasky/user/presentation/notifiers/user_viewmodel.dart';
 
@@ -8,6 +9,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider(create: (_) => TaskViewModel()),
       ],
       child: const MyApp(),
     ),
