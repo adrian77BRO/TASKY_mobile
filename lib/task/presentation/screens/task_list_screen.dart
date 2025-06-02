@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasky/task/data/models/task.dart';
 import 'package:tasky/task/presentation/notifiers/task_viewmodel.dart';
+import 'package:tasky/task/presentation/screens/task_detail_screen.dart';
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -105,6 +106,21 @@ class _TaskListScreenState extends State<TaskListScreen> {
                             ),
                             margin: const EdgeInsets.only(bottom: 16),
                             child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) =>
+                                            TaskDetailScreen(taskId: task.id),
+                                  ),
+                                ).then((_) {
+                                  Provider.of<TaskViewModel>(
+                                    context,
+                                    listen: false,
+                                  ).filterTasksByStatus(selectedStatus);
+                                });
+                              },
                               title: Text(
                                 task.title,
                                 style: const TextStyle(color: Colors.white),

@@ -24,14 +24,12 @@ class TaskRepository {
   Future<List<Task>> fetchTasksByStatus(String status) async {
     final token = await TokenService.getToken();
 
-    final uri = status == 'all'
-      ? Uri.parse('$baseUrl/task')
-      : Uri.parse('$baseUrl/task/search?status=$status');
+    final uri =
+        status == 'all'
+            ? Uri.parse('$baseUrl/task')
+            : Uri.parse('$baseUrl/task/search?status=$status');
 
-    final response = await http.get(
-      uri,
-      headers: {'Authorization': '$token'},
-    );
+    final response = await http.get(uri, headers: {'Authorization': '$token'});
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -40,5 +38,31 @@ class TaskRepository {
     } else {
       throw Exception('Error al filtrar tareas');
     }
+  }
+
+  Future<Task> fetchTaskById(int id) async {
+    final token = await TokenService.getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/task/$id'),
+      headers: {'Authorization': '$token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return Task.fromJson(data['task']);
+    } else {
+      throw Exception('Error al obtener la tarea');
+    }
+  }
+
+  Future<bool> completeTask(int id) async {
+    final token = await TokenService.getToken();
+    final response = await http.patch(
+      Uri.parse('$baseUrl/task/$id/complete'),
+      headers: {'Authorization': '$token'},
+    );
+
+    if (response.statusCode == 201) return true;
+    return false;
   }
 }
