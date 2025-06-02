@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasky/task/data/models/task.dart';
 import 'package:tasky/task/presentation/notifiers/task_viewmodel.dart';
+import 'package:tasky/task/presentation/screens/form_screen.dart';
 import 'package:tasky/task/presentation/screens/task_detail_screen.dart';
 
 class TaskListScreen extends StatefulWidget {
@@ -21,13 +22,13 @@ class _TaskListScreenState extends State<TaskListScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<TaskViewModel>(context);
-    final green = Colors.greenAccent.shade400;
+    final green = Color(0xFF16961A);
     String selectedStatus = 'all';
 
     Color getStatusColor(Task task) {
-      if (task.completed) return Colors.green;
-      if (task.dueDate.isBefore(DateTime.now())) return Colors.red;
-      return Colors.amber;
+      if (task.completed) return Color(0xFF16961A);
+      if (task.dueDate.isBefore(DateTime.now())) return Color(0xFFDB1313);
+      return Color(0xFFDAAC16);
     }
 
     String getStatusLabel(Task task) {
@@ -136,14 +137,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                     onPressed: () {},
                                     icon: const Icon(
                                       Icons.edit,
-                                      color: Colors.green,
+                                      color: Color(0xFF16961A),
                                     ),
                                   ),
                                   IconButton(
                                     onPressed: () {},
                                     icon: const Icon(
                                       Icons.delete,
-                                      color: Colors.red,
+                                      color: Color(0xFFDB1313),
                                     ),
                                   ),
                                 ],
@@ -160,7 +161,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
         backgroundColor: green,
         child: const Icon(Icons.add, color: Colors.black),
         onPressed: () {
-          // TODO: Agregar nueva tarea
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const CreateTaskScreen()),
+          ).then((_) {
+            Provider.of<TaskViewModel>(
+              context,
+              listen: false,
+            ).filterTasksByStatus(selectedStatus);
+          });
         },
       ),
     );

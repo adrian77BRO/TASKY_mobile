@@ -55,6 +55,27 @@ class TaskRepository {
     }
   }
 
+  Future<bool> createTask({
+    required String title,
+    required String description,
+    required DateTime dueDate,
+  }) async {
+    final token = await TokenService.getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/task'),
+      headers: {
+        'Authorization': '$token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'title': title,
+        'description': description,
+        'dueDate': dueDate.toIso8601String(),
+      }),
+    );
+    return response.statusCode == 201;
+  }
+
   Future<bool> completeTask(int id) async {
     final token = await TokenService.getToken();
     final response = await http.patch(

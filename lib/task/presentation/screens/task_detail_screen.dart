@@ -11,7 +11,7 @@ class TaskDetailScreen extends StatefulWidget {
 }
 
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
-  final green = Colors.greenAccent.shade400;
+  final green = Color(0xFF16961A);
 
   @override
   void initState() {
@@ -84,7 +84,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           const SizedBox(height: 16),
                           Text(
                             'Fecha límite: ${formatDate(task.dueDate)}',
-                            style: const TextStyle(color: Colors.orangeAccent),
+                            style: const TextStyle(color: Color(0xFFDAAC16)),
                           ),
                         ],
                       ),
