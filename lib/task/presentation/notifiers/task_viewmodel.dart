@@ -12,6 +12,7 @@ class TaskViewModel extends ChangeNotifier {
 
   List<Task> tasks = [];
   Task? selectedTask;
+  Task? editingTask;
   bool isLoading = false;
 
   String get formattedDate =>
@@ -45,9 +46,7 @@ class TaskViewModel extends ChangeNotifier {
   Future<void> loadTasks() async {
     isLoading = true;
     notifyListeners();
-
     tasks = await _service.fetchTasks();
-
     isLoading = false;
     notifyListeners();
   }
@@ -55,9 +54,7 @@ class TaskViewModel extends ChangeNotifier {
   Future<void> filterTasksByStatus(String status) async {
     isLoading = true;
     notifyListeners();
-
     tasks = await _service.fetchTasksByStatus(status);
-
     isLoading = false;
     notifyListeners();
   }
@@ -65,9 +62,7 @@ class TaskViewModel extends ChangeNotifier {
   Future<void> loadTaskById(int id) async {
     isLoading = true;
     notifyListeners();
-
     selectedTask = await _service.fetchTaskById(id);
-
     isLoading = false;
     notifyListeners();
   }
@@ -80,15 +75,55 @@ class TaskViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final success = await _service.createTask(
+    /*final success = await _service.createTask(
       title: title,
       description: desc,
       dueDate: selectedDate!,
-    );
+    );*/
+
+    final success =
+        editingTask == null
+            ? await _service.createTask(
+              title: title,
+              description: desc,
+              dueDate: selectedDate!,
+            )
+            : await _service.updateTask(
+              id: editingTask!.id,
+              title: title,
+              description: desc,
+              dueDate: selectedDate!,
+            );
 
     isLoading = false;
     notifyListeners();
     return success;
+  }
+
+  void loadTaskForEditing(Task task) {
+    editingTask = task;
+    titleController.text = task.title;
+    descController.text = task.description;
+    selectedDate = task.dueDate;
+    notifyListeners();
+  }
+
+  Future<void> deleteTask(int taskId) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      await _service.deleteTask(taskId);
+
+      tasks.removeWhere((t) => t.id == taskId);
+
+      isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      rethrow;
+    }
   }
 
   Future<bool> completeSelectedTask() async {
@@ -108,9 +143,12 @@ class TaskViewModel extends ChangeNotifier {
     return success;
   }
 
-  void disposeFields() {
-    titleController.dispose();
-    descController.dispose();
+  void clearForm() {
+    titleController.clear();
+    descController.clear();
+    selectedDate = null;
+    editingTask = null;
+    notifyListeners();
   }
 
   void clearSelectedTask() {

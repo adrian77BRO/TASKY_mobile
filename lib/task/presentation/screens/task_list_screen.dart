@@ -134,14 +134,91 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      final vm = Provider.of<TaskViewModel>(
+                                        context,
+                                        listen: false,
+                                      );
+                                      vm.loadTaskForEditing(task);
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (_) => const CreateTaskScreen(),
+                                        ),
+                                      ).then((_) {
+                                        Provider.of<TaskViewModel>(
+                                          context,
+                                          listen: false,
+                                        ).filterTasksByStatus(selectedStatus);
+                                      });
+                                    },
                                     icon: const Icon(
                                       Icons.edit,
-                                      color: Color(0xFF16961A),
+                                      color: Color(0xFF1422BD),
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder:
+                                            (context) => AlertDialog(
+                                              backgroundColor: Colors.black,
+                                              title: const Text(
+                                                'Confirmar eliminación',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              content: const Text(
+                                                '¿Estás seguro de eliminar esta tarea?',
+                                                style: TextStyle(
+                                                  color: Colors.white70,
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        false,
+                                                      ),
+                                                  child: const Text(
+                                                    'Cancelar',
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        true,
+                                                      ),
+                                                  child: const Text(
+                                                    'Eliminar',
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      );
+                                      if (confirm == true) {
+                                        await Provider.of<TaskViewModel>(
+                                          context,
+                                          listen: false,
+                                        ).deleteTask(task.id);
+                                        Provider.of<TaskViewModel>(
+                                          context,
+                                          listen: false,
+                                        ).filterTasksByStatus(selectedStatus);
+                                      }
+                                    },
                                     icon: const Icon(
                                       Icons.delete,
                                       color: Color(0xFFDB1313),
@@ -161,6 +238,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
         backgroundColor: green,
         child: const Icon(Icons.add, color: Colors.black),
         onPressed: () {
+          final formVM = Provider.of<TaskViewModel>(context, listen: false);
+          formVM.clearForm();
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const CreateTaskScreen()),

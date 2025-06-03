@@ -63,10 +63,7 @@ class TaskRepository {
     final token = await TokenService.getToken();
     final response = await http.post(
       Uri.parse('$baseUrl/task'),
-      headers: {
-        'Authorization': '$token',
-        'Content-Type': 'application/json',
-      },
+      headers: {'Authorization': '$token', 'Content-Type': 'application/json'},
       body: jsonEncode({
         'title': title,
         'description': description,
@@ -74,6 +71,37 @@ class TaskRepository {
       }),
     );
     return response.statusCode == 201;
+  }
+
+  Future<bool> updateTask({
+    required int id,
+    required String title,
+    required String description,
+    required DateTime dueDate,
+  }) async {
+    final token = await TokenService.getToken();
+    final response = await http.put(
+      Uri.parse('$baseUrl/task/$id'),
+      headers: {'Authorization': '$token', 'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'title': title,
+        'description': description,
+        'dueDate': dueDate.toIso8601String(),
+      }),
+    );
+    return response.statusCode == 201;
+  }
+
+  Future<void> deleteTask(int id) async {
+    final token = await TokenService.getToken();
+    final response = await http.delete(
+      Uri.parse('$baseUrl/task/$id'),
+      headers: {'Content-Type': 'application/json', 'Authorization': '$token'},
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('No se pudo eliminar la tarea');
+    }
   }
 
   Future<bool> completeTask(int id) async {

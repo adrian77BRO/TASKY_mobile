@@ -9,11 +9,12 @@ class CreateTaskScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final formVM = Provider.of<TaskViewModel>(context);
     final green = Color(0xFF16961A);
+    final isEditing = formVM.editingTask != null;
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Nueva tarea', style: TextStyle(color: green)),
+        title: Text(isEditing ? 'Editar tarea' : 'Nueva tarea', style: TextStyle(color: green)),
         backgroundColor: Colors.black,
         centerTitle: true,
         elevation: 0,
@@ -82,6 +83,7 @@ class CreateTaskScreen extends StatelessWidget {
                                 ),
                               );
                               Navigator.pop(context);
+                              Provider.of<TaskViewModel>(context, listen: false).clearForm();
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
