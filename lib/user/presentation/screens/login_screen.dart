@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tasky/core/navigation/routes.dart';
 import 'package:tasky/task/presentation/screens/task_list_screen.dart';
-import 'package:tasky/user/presentation/screens/register_screen.dart';
-import 'package:tasky/user/presentation/notifiers/user_viewmodel.dart';
+import 'package:tasky/user/presentation/notifiers/user_notifier.dart';
 
 class LoginScreen extends StatelessWidget {
   final emailController = TextEditingController();
@@ -141,10 +141,7 @@ class LoginScreen extends StatelessWidget {
 
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => RegisterScreen()),
-                    );
+                    Navigator.pushNamed(context, AppRoutes.register);
                   },
                   child: Text(
                     '¿No tienes cuenta?',

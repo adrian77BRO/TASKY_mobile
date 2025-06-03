@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tasky/task/data/datasource/task_service.dart';
 import 'package:tasky/task/data/models/task.dart';
 import 'package:tasky/task/data/repositories/task_repository.dart';
 
 class TaskViewModel extends ChangeNotifier {
-  final TaskRepository _service = TaskRepository();
+  final ITaskService _service = TaskApiRepository();
 
   final titleController = TextEditingController();
   final descController = TextEditingController();
@@ -74,12 +75,6 @@ class TaskViewModel extends ChangeNotifier {
 
     isLoading = true;
     notifyListeners();
-
-    /*final success = await _service.createTask(
-      title: title,
-      description: desc,
-      dueDate: selectedDate!,
-    );*/
 
     final success =
         editingTask == null

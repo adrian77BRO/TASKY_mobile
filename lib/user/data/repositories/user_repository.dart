@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:tasky/core/network/api_service.dart';
+import 'package:tasky/core/network/endpoints.dart';
+import 'package:tasky/user/data/datasource/user_service.dart';
 import 'package:tasky/user/data/models/login.dart';
 import 'package:tasky/user/data/models/user.dart';
 
-class UserRepository {
+class UserApiRepository implements IUserService {
+  @override
   Future<Map<String, dynamic>> login(Login user) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/user/login'),
+      Uri.parse(ApiEndpoints.login),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(user.toJson()),
     );
@@ -18,9 +20,10 @@ class UserRepository {
     };
   }
 
+  @override
   Future<Map<String, dynamic>> register(User user) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/user/register'),
+      Uri.parse(ApiEndpoints.register),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(user.toJson()),
     );

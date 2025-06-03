@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:tasky/core/network/api_service.dart';
-import 'package:tasky/core/network/token_service.dart';
+import 'package:tasky/core/network/endpoints.dart';
+import 'package:tasky/core/storage/token_service.dart';
+import 'package:tasky/task/data/datasource/task_service.dart';
 import 'package:tasky/task/data/models/task.dart';
 
-class TaskRepository {
+class TaskApiRepository implements ITaskService {
+  @override
   Future<List<Task>> fetchTasks() async {
     final token = await TokenService.getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/task'),
+      Uri.parse(ApiEndpoints.tasks),
       headers: {'Authorization': '$token'},
     );
 
@@ -21,13 +23,13 @@ class TaskRepository {
     }
   }
 
+  @override
   Future<List<Task>> fetchTasksByStatus(String status) async {
     final token = await TokenService.getToken();
-
     final uri =
         status == 'all'
-            ? Uri.parse('$baseUrl/task')
-            : Uri.parse('$baseUrl/task/search?status=$status');
+            ? Uri.parse(ApiEndpoints.tasks)
+            : Uri.parse(ApiEndpoints.searchTasks(status));
 
     final response = await http.get(uri, headers: {'Authorization': '$token'});
 
@@ -40,10 +42,11 @@ class TaskRepository {
     }
   }
 
+  @override
   Future<Task> fetchTaskById(int id) async {
     final token = await TokenService.getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/task/$id'),
+      Uri.parse(ApiEndpoints.task(id)),
       headers: {'Authorization': '$token'},
     );
 
@@ -55,6 +58,7 @@ class TaskRepository {
     }
   }
 
+  @override
   Future<bool> createTask({
     required String title,
     required String description,
@@ -62,7 +66,7 @@ class TaskRepository {
   }) async {
     final token = await TokenService.getToken();
     final response = await http.post(
-      Uri.parse('$baseUrl/task'),
+      Uri.parse(ApiEndpoints.tasks),
       headers: {'Authorization': '$token', 'Content-Type': 'application/json'},
       body: jsonEncode({
         'title': title,
@@ -73,6 +77,7 @@ class TaskRepository {
     return response.statusCode == 201;
   }
 
+  @override
   Future<bool> updateTask({
     required int id,
     required String title,
@@ -81,7 +86,7 @@ class TaskRepository {
   }) async {
     final token = await TokenService.getToken();
     final response = await http.put(
-      Uri.parse('$baseUrl/task/$id'),
+      Uri.parse(ApiEndpoints.task(id)),
       headers: {'Authorization': '$token', 'Content-Type': 'application/json'},
       body: jsonEncode({
         'title': title,
@@ -92,10 +97,11 @@ class TaskRepository {
     return response.statusCode == 201;
   }
 
+  @override
   Future<void> deleteTask(int id) async {
     final token = await TokenService.getToken();
     final response = await http.delete(
-      Uri.parse('$baseUrl/task/$id'),
+      Uri.parse(ApiEndpoints.task(id)),
       headers: {'Content-Type': 'application/json', 'Authorization': '$token'},
     );
 
@@ -104,14 +110,14 @@ class TaskRepository {
     }
   }
 
+  @override
   Future<bool> completeTask(int id) async {
     final token = await TokenService.getToken();
     final response = await http.patch(
-      Uri.parse('$baseUrl/task/$id/complete'),
+      Uri.parse(ApiEndpoints.completeTask(id)),
       headers: {'Authorization': '$token'},
     );
 
-    if (response.statusCode == 201) return true;
-    return false;
+    return response.statusCode == 201;
   }
 }

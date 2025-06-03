@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tasky/task/presentation/notifiers/task_viewmodel.dart';
+import 'package:tasky/task/presentation/notifiers/task_notifier.dart';
 
-class CreateTaskScreen extends StatelessWidget {
-  const CreateTaskScreen({super.key});
+class FormScreen extends StatelessWidget {
+  const FormScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

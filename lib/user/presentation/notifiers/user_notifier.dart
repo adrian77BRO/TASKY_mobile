@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tasky/core/network/token_service.dart';
+import 'package:tasky/core/storage/token_service.dart';
+import 'package:tasky/user/data/datasource/user_service.dart';
 import 'package:tasky/user/data/models/login.dart';
 import 'package:tasky/user/data/models/user.dart';
 import 'package:tasky/user/data/repositories/user_repository.dart';
 
 class UserViewModel extends ChangeNotifier {
-  final UserRepository _userService = UserRepository();
+  final IUserService _userService = UserApiRepository();
   bool isLoading = false;
   String? token;
 

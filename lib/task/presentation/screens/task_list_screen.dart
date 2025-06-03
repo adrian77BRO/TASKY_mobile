@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tasky/core/navigation/routes.dart';
 import 'package:tasky/task/data/models/task.dart';
-import 'package:tasky/task/presentation/notifiers/task_viewmodel.dart';
-import 'package:tasky/task/presentation/screens/form_screen.dart';
-import 'package:tasky/task/presentation/screens/task_detail_screen.dart';
+import 'package:tasky/task/presentation/notifiers/task_notifier.dart';
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -108,13 +107,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                             margin: const EdgeInsets.only(bottom: 16),
                             child: ListTile(
                               onTap: () {
-                                Navigator.push(
+                                Navigator.pushNamed(
                                   context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (_) =>
-                                            TaskDetailScreen(taskId: task.id),
-                                  ),
+                                  AppRoutes.taskDetail,
+                                  arguments: task.id,
                                 ).then((_) {
                                   Provider.of<TaskViewModel>(
                                     context,
@@ -141,12 +137,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                       );
                                       vm.loadTaskForEditing(task);
 
-                                      Navigator.push(
+                                      Navigator.pushNamed(
                                         context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) => const CreateTaskScreen(),
-                                        ),
+                                        AppRoutes.taskForm,
                                       ).then((_) {
                                         Provider.of<TaskViewModel>(
                                           context,
@@ -241,10 +234,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
           final formVM = Provider.of<TaskViewModel>(context, listen: false);
           formVM.clearForm();
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const CreateTaskScreen()),
-          ).then((_) {
+          Navigator.pushNamed(context, AppRoutes.taskForm).then((_) {
             Provider.of<TaskViewModel>(
               context,
               listen: false,

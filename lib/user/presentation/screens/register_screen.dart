@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tasky/user/presentation/screens/login_screen.dart';
-import 'package:tasky/user/presentation/notifiers/user_viewmodel.dart';
+import 'package:tasky/core/navigation/routes.dart';
+import 'package:tasky/user/presentation/notifiers/user_notifier.dart';
 
 class RegisterScreen extends StatelessWidget {
   final usernameController = TextEditingController();
@@ -146,11 +146,9 @@ class RegisterScreen extends StatelessWidget {
                             showMessage(message);
 
                             if (message.contains('exitosamente')) {
-                              Navigator.pushReplacement(
+                              Navigator.pushReplacementNamed(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => LoginScreen(),
-                                ),
+                                AppRoutes.login,
                               );
                             }
                           },
@@ -166,10 +164,7 @@ class RegisterScreen extends StatelessWidget {
 
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => LoginScreen()),
-                    );
+                    Navigator.pushNamed(context, AppRoutes.login);
                   },
                   child: Text(
                     '¿Ya tienes cuenta?',

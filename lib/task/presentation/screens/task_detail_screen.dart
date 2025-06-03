@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tasky/task/presentation/notifiers/task_viewmodel.dart';
+import 'package:tasky/task/presentation/notifiers/task_notifier.dart';
 
 class TaskDetailScreen extends StatefulWidget {
-  final int taskId;
-  const TaskDetailScreen({super.key, required this.taskId});
+  const TaskDetailScreen({super.key});
 
   @override
   State<TaskDetailScreen> createState() => _TaskDetailScreenState();
@@ -16,8 +15,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   @override
   void initState() {
     super.initState();
-    final taskVM = Provider.of<TaskViewModel>(context, listen: false);
-    taskVM.loadTaskById(widget.taskId);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final taskId = ModalRoute.of(context)!.settings.arguments as int;
+      final taskVM = Provider.of<TaskViewModel>(context, listen: false);
+      taskVM.loadTaskById(taskId);
+    });
   }
 
   @override
